@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.table-scroll::-webkit-scrollbar {
+    @apply w-1 cursor-pointer
+}
+
+.table-scroll::-webkit-scrollbar-track {
+    @apply cursor-pointer bg-transparent
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+    @apply cursor-pointer bg-scorers rounded-3xl
+}
