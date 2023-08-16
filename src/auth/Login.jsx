@@ -10,9 +10,7 @@ function Login() {
 
     const {login} = useAuth()
 
-
     const navigate = useNavigate()
-
 
     const [formData, setFormData] = useState({
         email: '',

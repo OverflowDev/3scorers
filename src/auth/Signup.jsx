@@ -1,29 +1,83 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
+
+import axios from 'axios'
+
+import { useNavigate } from "react-router-dom"
 
 import Scorer from '../assets/scorer.svg'
+import useAuth from '../hooks/useAuth'
 
 function Signup() {
 
+    const {login} = useAuth()
+
+    const navigate = useNavigate()
+
+    const [backendErrors, setBackendErrors] = useState(null)
+    const [isFormFilled, setIsFormFilled] = useState(false);
+
     const [formData, setFormData] = useState({
-        email: '',
-        firstName: '',
-        lastName: '',
-        username: '',
-        password: '',
-        repeat_password: '',
+        firstName: "",
+        lastName: "",
+        username: "",
+        email: "",
+        password: "",
+        repeat_password: "",
     })
 
     const onChange = (e) => {
         const { name, value } = e.target
         setFormData({
           ...formData,
-          [name]: name === 'username' ? value.toLowerCase() : value
+        //   [name]: name === 'username' ? value.toLowerCase() : value
+          [name]: value
         })
     }
+
+    useEffect(() => {
+        const allFieldsFilled = Object.values(formData).every((value) => value !== '');
+        setIsFormFilled(allFieldsFilled);
+    }, [formData]);
 
     
     const onRegistration = async (e) => {
         e.preventDefault()
+        try {
+            const response = await axios.post('https://test.3scorers.com/api/v1/admin/sign-up/?adminId=1', formData,
+                {
+                    headers: {'Content-Type': 'application/json'},
+                }
+            )
+
+            let payload = {
+                email: formData.email,
+                password: formData.password,
+            }
+
+            // login(payload)
+
+            if (response.data.success) {
+
+                await login(payload)
+                navigate('/overview')
+                console.log('Created user')
+
+            } else {
+                console.log('error');
+            }
+            
+        } catch (error) {
+            console.log(error)
+
+           if(!error?.response) {
+            console.log('No server Response');
+           } else if(error.response?.status === 409) {
+            // console.log(error.response?.data?.data);
+            setBackendErrors(error.response?.data?.data)
+           } else {
+            console.log('Registration failed');
+           }
+        }
     }
 
   return (
@@ -106,12 +160,18 @@ function Signup() {
                     />
                 </div>
 
-                <div className='flex justify-center mt-16'>
+                <div>
+                    <p className="error">{backendErrors}</p>
+                </div>
+
+                <div className='flex justify-center md:mt-16'>
                     <button
                         className='py-2 px-3 w-1/3 text-center bg-scorers rounded-md text-white'
                         type='submit'
+                        disabled={!isFormFilled}
                     >
-                        Sign Up
+                        {!isFormFilled ? 'Fill all form' : 'Sign Up'}
+                        {/* Sign Up */}
                     </button>
                 </div>
 

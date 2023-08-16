@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import SignUp from './auth/SignUp'
+import Signup from './auth/Signup'
 import Login from './auth/Login'
 import Overview from './components/Overview'
 import Users from './components/Users'
@@ -14,14 +14,14 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<Login />} />
-        <Route path='/signup' element={<SignUp />} />
+        <Route path='/signup' element={<Signup />} />
         <Route path='/login' element={<Login />} />
 
-        {/* <Route element={<ProtectedRoute />}> */}
+        <Route element={<ProtectedRoute />}>
           <Route path='/overview' element={<Overview />} />
           <Route path='/users' element={<Users />} />
           <Route path='/admin' element={<Admins />} />
-        {/* </Route>   */}
+        </Route>  
       </Routes>
     </Router>
   )
